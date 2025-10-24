@@ -12,7 +12,7 @@
     @include('layouts.navbar')
 
     {{-- CONTENT --}}
-    <div>
+    <div class="h-full bg-black">
         @yield('content')
     </div>
 
