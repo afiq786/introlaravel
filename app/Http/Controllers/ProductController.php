@@ -15,8 +15,26 @@ class ProductController extends Controller
         return view('pages.produk.show', ['data' => $eloquent]);
     }
 
-    public function addProduct()
+    public function create()
     {
         return view('pages.produk.add');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_produk' => 'required',
+            'harga_produk' => 'required',
+            'deskripsi' => 'required',
+            'id_kategori' => 'required'
+        ]);
+        Produk::create([
+            'nama_produk'=> $request->nama_produk,
+            'harga' => $request->harga_produk,
+            'deskripsi_produk' => $request->deskripsi,
+            'kategori_id' => $request->id_kategori
+        ]);
+
+        return redirect('/product')->with('msg', "Item succesfully added to the list");
     }
 }
