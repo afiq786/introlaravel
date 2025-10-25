@@ -13,5 +13,5 @@ Route::get('/about', function () {
 
 Route::view('/contact','pages.contact');
 
-Route::get('/product',[ProductController::class, 'getAllProduct']);
+Route::get('/product',[ProductController::class, 'index']); // To read/show all data
 Route::get('/product/addProduct',[ProductController::class, 'addProduct']);
