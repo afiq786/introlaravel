@@ -1,5 +1,5 @@
 @extends('layouts.master')
 
 @section('content')
-    <h1>CONTACT</h1>
+    <h3>CONTACT</h3>
 @endsection

@@ -2,11 +2,13 @@
 
 @section('content')
     <section class="mb-8">
-        <h2 class="text-4xl tracking-tight text-shadow-md font-bold text-center">Add Product</h2>
+        <h2 class="text-4xl tracking-tight text-shadow-md font-bold text-center">Edit Product</h2>
     </section>
 
     <section class="flex justify-center w-screen">
-        <form action="/product" method="POST" class="bg-slate-800 shadow-lg rounded-lg px-8 py-8 mb-4 min-w-4xl">
+        <form action="/product/{{ $product->id_produk }}" method="POST"
+            class="bg-slate-800 shadow-lg rounded-lg px-8 py-8 mb-4 min-w-4xl">
+            @method('PUT')
             @csrf
             <div class="mb-4">
                 <label class="block text-slate-100 text-sm font-bold mb-2">
@@ -14,7 +16,7 @@
                 </label>
                 <input
                     class="shadow bg-slate-100 rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text" name="product_name" value="{{ old('product_name') }}">
+                    type="text" name="product_name" value="{{ $product->nama_produk }}">
                 @error('product_name')
                     <div class="text-red-600">{{ $message }}</div>
                 @enderror
@@ -26,7 +28,7 @@
                 </label>
                 <input
                     class="shadow bg-slate-100 border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="number" name="price" value="{{ old('price') }}">
+                    type="number" name="price" value="{{ $product->harga }}">
                 @error('price')
                     <div class=" text-red-600">{{ $message }}
                     </div>
@@ -39,7 +41,7 @@
                 </label>
                 <input
                     class="shadow bg-slate-100 rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="textarea" name="description" value="{{ old('description') }}">
+                    type="textarea" name="description" value="{{ $product->deskripsi_produk }}">
                 @error('description')
                     <div class="
                     text-red-600">{{ $message }}
@@ -53,7 +55,7 @@
                 </label>
                 <input
                     class="shadow bg-slate-100 rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="number" name="category_id" value="{{ old('category_id') }}">
+                    type="number" name="category_id" value="{{ $product->kategori_id }}">
                 @error('category_id')
                     <div class="
                     text-red-600">{{ $message }}
@@ -64,7 +66,7 @@
             <div class="flex justify-end">
                 <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-200 flex items-center gap-2">
-                    Submit
+                    Update Product
                 </button>
             </div>
         </form>

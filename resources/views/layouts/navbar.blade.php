@@ -5,5 +5,6 @@
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
         <a href="/product">Product</a>
+        <a href="/category">Product Category</a>
     </nav>
 </div>

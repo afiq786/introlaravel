@@ -1,9 +1,8 @@
 @extends('layouts.master')
 
-
 @section('content')
     <section class="mb-8">
-        <h2 class="text-4xl tracking-tight text-shadow-md font-bold text-center">Product List</h2>
+        <h2 class="text-4xl tracking-tight text-shadow-md font-bold text-center">Category List</h2>
         @if (session('msg'))
             <div
                 class="bg-green-700 text-green-100 mt-6 tracking-wide py-2 px-4 mx-auto max-w-md text-center rounded-lg shadow-lg">
@@ -19,57 +18,35 @@
         @endif
     </section>
 
+    {{-- Table Section --}}
     <div class="flex flex-col items-center w-screen px-4">
-        <div class="w-full max-w-7xl mb-4 flex justify-between items-center">
+        <div class="w-full max-w-5xl mb-5 overflow-x-auto shadow-lg rounded-lg">
             <button
                 class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition duration-200 flex items-center gap-2">
-                <a href="/product/create"> Add product</a>
+                <a href="/category/create"> Add Category</a>
             </button>
-
-            <div class="w-full max-w-sm flex justify-end items-center">
-                @if (Request()->keyword != '')
-                    <div class="flex mr-3">
-                        <a class="px-8 py-2 bg-amber-400 text-black rounded-md" href="/product">Reset</a>
-                    </div>
-                @endif
-                <form class="relative flex  items-center">
-                    <input type="text" name="keyword" value="{{ Request()->keyword }}"
-                        class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-400 rounded-md pl-3 pr-20 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                        placeholder="Search item" />
-                    <button type="submit"
-                        class="absolute right-1 bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm hover:bg-blue-600 transition duration-300 ease">Search<button>
-                </form>
-            </div>
-        </div>
-
-
-        <div class="w-full max-w-7xl mb-5 overflow-x-auto shadow-lg rounded-lg">
-            <table class="w-full border-collapse">
+            <table class="table-fixed mt-5 w-full">
                 <thead class="bg-slate-800 text-slate-100">
                     <tr>
                         <th class="py-3 px-4 text-left font-semibold">No</th>
-                        <th class="py-3 px-4 text-left font-semibold">Item</th>
-                        <th class="py-3 px-4 text-left font-semibold">Price</th>
+                        <th class="py-3 px-4 text-left font-semibold">Name</th>
                         <th class="py-3 px-4 text-left font-semibold">Description</th>
-                        <th class="py-3 px-4 text-left font-semibold">Category ID</th>
-                        <th class="py-3 px-4 text-center font-semibold">Action</th>
+                        <th class="py-3 px-4 text-left font-semibold">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    @forelse ($data as $item)
+                    @forelse ($category as $item)
                         <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
                             <td class="py-3 px-4">{{ $loop->iteration }}</td>
-                            <td class="py-3 px-4 font-medium">{{ $item->nama_produk }}</td>
-                            <td class="py-3 px-4">RM {{ number_format($item->harga, 2) }}</td>
-                            <td class="py-3 px-4">{{ Str::limit($item->deskripsi_produk, 50) }}</td>
-                            <td class="py-3 px-4">{{ $item->kategori_id }}</td>
+                            <td class="py-3 px-4 font-medium">{{ $item->nama_kategori }}</td>
+                            <td class="py-3 px-4">{{ Str::limit($item->deskripsi, 50) }}</td>
                             <td class="py-3 px-4">
-                                <div class="flex justify-center items-center gap-2">
-                                    <a href="/product/{{ $item->id_produk }}/edit"
+                                <div class="justify-center items-center gap-2">
+                                    <a href="/category/{{ $item->id_kategori }}/edit"
                                         class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition text-sm font-medium">Edit</a>
-                                    <button command="show-modal" commandfor="dialog-{{ $item->id_produk }}"
+                                    <button command="show-modal" commandfor="dialog-{{ $item->id_kategori }}"
                                         class="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 transition">Delete</button>
-                                    <a href="/product/{{ $item->id_produk }}"
+                                    <a href="/category/{{ $item->id_kategori }}"
                                         class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm font-medium">Details</a>
                                 </div>
                             </td>
@@ -84,11 +61,10 @@
         </div>
     </div>
 
-
     {{-- DELETE CONFIRMATION DIALAOG --}}
-    @foreach ($data as $item)
+    @foreach ($category as $item)
         <el-dialog>
-            <dialog id="dialog-{{ $item->id_produk }}" aria-labelledby="dialog-title-{{ $item->id_produk }}"
+            <dialog id="dialog-{{ $item->id_kategori }}" aria-labelledby="dialog-title-{{ $item->id_kategori }}"
                 class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
                 <el-dialog-backdrop
                     class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
@@ -109,9 +85,9 @@
                                     </svg>
                                 </div>
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                    <h3 id="dialog-title-{{ $item->id_produk }}"
+                                    <h3 id="dialog-title-{{ $item->id_kategori }}"
                                         class="text-base font-semibold text-gray-900">Delete
-                                        {{ $item->nama_produk }}</h3>
+                                        {{ $item->nama_kategori }}</h3>
                                     <div class="mt-2">
                                         <p class="text-sm text-gray-500">Are you sure you want
                                             to delete item above?</p>
@@ -120,12 +96,12 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <form action="/product/{{ $item->id_produk }}" method="POST">
+                            <form action="/category/{{ $item->id_kategori }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" command="close" commandfor="dialog"
                                     class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
-                                <button type="button" command="close" commandfor="dialog-{{ $item->id_produk }}"
+                                <button type="button" command="close" commandfor="dialog-{{ $item->id_kategori }}"
                                     class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
                             </form>
 

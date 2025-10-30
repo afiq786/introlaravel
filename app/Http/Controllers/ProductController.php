@@ -9,20 +9,22 @@ use Termwind\Components\Dd;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        $eloquent = Produk::get(); //Query to retrieve all the data in tb_produk using eloquent method
+    public function index(Request $request){
+        $search = $request->keyword;
+        $eloquent = Produk::when($search, function($query,$search){
+            return $query->where('nama_produk','like',"%{$search}%")->orWhere('deskripsi_produk','like',"%{$search}%");
+        })->get(); //Query to retrieve all the data in tb_produk using eloquent method
         // $queryBuilder = DB::table('tb_produk')->get(); //Query to retrieve all the data in tb_produk using query builder method
+
+
         return view('pages.produk.show', ['data' => $eloquent]);
     }
 
-    public function create()
-    {
+    public function create(){
         return view('pages.produk.add');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate(
             [
                 'product_name' => 'required',
@@ -46,14 +48,48 @@ class ProductController extends Controller
         return redirect('/product')->with('msg', "Item succesfully added to the list");
     }
 
-
     public function show($id) {
         //Eloquent ORM method
         $detail = Produk::findOrFail($id);
-
         //Query builder method
         // DB::table('tb_produk')->where('id_produk', $id)->firstOrFail();
-
         return view('pages.produk.detail', ['product' => $detail]);
+    }
+
+    public function edit($id) {
+        //capture specific data based on the ID of the product
+        $detail = Produk::findOrFail($id);
+        return view('pages.produk.edit', ['product' => $detail]);
+    }
+
+    public function update($id,Request $request) {
+        $request->validate(
+            [
+                'product_name' => 'required',
+                'price'=> 'required',
+                'description' => 'required',
+                'category_id' => 'required'
+            ],
+            [
+                'product_name' => '* Field for Product Name is required',
+                'price' => '* Field for Price is required',
+                'description' => '* Field for Product Description is required',
+                'category_id' => '* Field for Category ID is required'
+            ]);
+
+            Produk::where('id_produk',$id)->update([
+                'nama_produk' => $request->product_name,
+                'harga' => $request->price,
+                'deskripsi_produk' => $request->description,
+                'kategori_id' => $request->category_id
+            ]);
+
+            return redirect('/product')->with('msg', "Item succesfully updated");
+    }
+
+    public function destroy($id) {
+        Produk::findOrFail($id)->delete();
+        return redirect('/product')->with('msg', "Item succesfully deleted");
+
     }
 }
